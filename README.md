@@ -50,8 +50,8 @@ WebSocket (Binance / Coinbase)
 - **Apache Kafka** (KRaft, Docker) — buffer central
 - **Redis** — fallback si Kafka indisponible
 - **MongoDB** (local) — stockage trades, stats, alertes
-- **Socket.IO** — push temps réel vers le dashboard
-- **React + Recharts** — dashboard live
+- **Express + Socket.IO** — API server (REST + WebSocket push)
+- **React + Vite + Recharts** — dashboard live
 - **Docker / Docker Compose** — Kafka + kafka-ui
 
 ---
@@ -60,7 +60,7 @@ WebSocket (Binance / Coinbase)
 
 - Node.js ≥ 18
 - Docker Desktop
-- MongoDB installé localement (port 27017)
+- MongoDB compass installé localement (port 27017)
 
 ---
 
@@ -167,5 +167,4 @@ Dashboard disponible sur `http://localhost:5173`
 - **Un consumer peut s'abonner à plusieurs topics** simultanément via `topics: []`
 - **Consumer 3 suffit pour les alertes** — il écrit en MongoDB ET publie sur `crypto.alerts`
 - **Pas de batch processing** — tout est traité message par message en temps réel
-
 Fait par GOBY Ervin, TOUMERT Rayan et SHUM Ben
