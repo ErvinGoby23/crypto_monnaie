@@ -25,7 +25,7 @@ const systemStatus = {
 mongoClient.connect().then(() => {
   db = mongoClient.db('crypto')
   systemStatus.mongodb = true
-  console.log('✅ MongoDB connecté')
+  console.log(' MongoDB connecté')
   startPolling()
 })
 
@@ -104,7 +104,7 @@ function startPolling() {
     }
   }, 2000)
 
-  console.log('🔄 Polling MongoDB démarré')
+  console.log('Polling MongoDB démarré')
 }
 
 app.get('/trades', async (req, res) => {
