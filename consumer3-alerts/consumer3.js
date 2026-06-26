@@ -47,7 +47,7 @@ async function start() {
           topic: 'crypto.alerts',
           messages: [{ value: JSON.stringify(alert) }]
         })
-        console.log(`🚨 ${alert.message}`)
+        console.log(` ${alert.message}`)
       }
 
       if (lastPrices[symbol] !== undefined) {
@@ -68,7 +68,7 @@ async function start() {
             topic: 'crypto.alerts',
             messages: [{ value: JSON.stringify(alert) }]
           })
-          console.log(`⚡ ${alert.message}`)
+          console.log(` ${alert.message}`)
         }
       }
 
