@@ -167,4 +167,5 @@ Dashboard disponible sur `http://localhost:5173`
 - **Un consumer peut s'abonner à plusieurs topics** simultanément via `topics: []`
 - **Consumer 3 suffit pour les alertes** — il écrit en MongoDB ET publie sur `crypto.alerts`
 - **Pas de batch processing** — tout est traité message par message en temps réel
+
 Fait par GOBY Ervin, TOUMERT Rayan et SHUM Ben
