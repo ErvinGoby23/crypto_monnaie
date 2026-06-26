@@ -33,11 +33,11 @@ async function start() {
   await mongoClient.connect()
   const db = mongoClient.db('crypto')
   const stats = db.collection('stats')
-  console.log('✅ MongoDB connecté')
+  console.log(' MongoDB connecté')
 
   await consumer.connect()
   await consumer.subscribe({ topics: ALL_TOPICS, fromBeginning: false })
-  console.log('✅ Consumer 2 connecté à Kafka')
+  console.log(' Consumer 2 connecté à Kafka')
 
   await consumer.run({
     eachMessage: async ({ message }) => {
@@ -70,7 +70,7 @@ async function start() {
           }
 
           await stats.insertOne(stat)
-          console.log(`📊 [${symbol}] ${w.name}: avg=$${stat.avgPrice} vol=${stat.totalVolume} trades=${stat.tradeCount}`)
+          console.log(`[${symbol}] ${w.name}: avg=$${stat.avgPrice} vol=${stat.totalVolume} trades=${stat.tradeCount}`)
 
           windows[symbol][w.name] = { prices: [], volumes: [], startTime: now }
         }

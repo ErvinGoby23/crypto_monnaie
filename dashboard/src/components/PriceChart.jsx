@@ -32,7 +32,7 @@ function SingleChart({ symbol, label, color, trades }) {
       marginBottom: '16px'
     }}>
       <div style={{ fontSize: '12px', color, textTransform: 'uppercase', marginBottom: '8px', fontWeight: 'bold' }}>
-        📈 {label}
+        analyse {label}
       </div>
 
       {chartData.length === 0 ? (

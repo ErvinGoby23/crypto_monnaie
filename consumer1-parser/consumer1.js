@@ -15,11 +15,11 @@ async function start() {
   await mongoClient.connect()
   const db = mongoClient.db('crypto')
   const trades = db.collection('trades')
-  console.log('✅ MongoDB connecté')
+  console.log('MongoDB connecté')
 
   await consumer.connect()
   await consumer.subscribe({ topics: ALL_TOPICS, fromBeginning: false })
-  console.log('✅ Consumer 1 connecté à Kafka')
+  console.log('Consumer 1 connecté à Kafka')
 
   await consumer.run({
     eachMessage: async ({ message }) => {
@@ -28,7 +28,7 @@ async function start() {
         ...trade,
         receivedAt: new Date()
       })
-      console.log(`💾 Stocké: ${trade.symbol} - $${trade.price}`)
+      console.log(`Stocké: ${trade.symbol} - $${trade.price}`)
     }
   })
 }

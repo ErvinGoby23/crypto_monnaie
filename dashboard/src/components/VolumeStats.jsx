@@ -6,7 +6,7 @@ export function VolumeStats({ stats }) {
   return (
     <div style={{ background: '#0d1117', border: '1px solid #1e2d40', borderRadius: '8px', padding: '16px' }}>
       <div style={{ fontSize: '12px', color: '#555', textTransform: 'uppercase', marginBottom: '12px' }}>
-        📊 Volume par fenêtre (BTC)
+        Volume par fenêtre (BTC)
       </div>
 
       {windows.map(w => {

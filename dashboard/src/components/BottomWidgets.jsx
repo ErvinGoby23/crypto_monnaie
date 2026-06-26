@@ -30,7 +30,7 @@ export function AlertsList({ alerts }) {
   )
 }
 
-// ─── Volume par fenêtre ────────────────────────────────────────────────────────
+// Volume par fenêtre 
 export function VolumeStats({ stats }) {
   const btcStats = stats['BTCUSDT'] || {}
   const windows  = ['1min', '5min', '15min', '1h']
@@ -59,7 +59,7 @@ export function VolumeStats({ stats }) {
   )
 }
 
-// ─── Santé système ─────────────────────────────────────────────────────────────
+
 export function SystemHealth({ connected, trades }) {
   const items = [
     { label: 'WebSocket Binance',  status: '● connecté', color: '#00ff88' },
@@ -79,7 +79,7 @@ export function SystemHealth({ connected, trades }) {
   return (
     <div style={{ background: '#0d1117', border: '1px solid #1e2d40', borderRadius: '8px', padding: '16px' }}>
       <div style={{ fontSize: '12px', color: '#555', textTransform: 'uppercase', marginBottom: '12px' }}>
-        🖥 Pipeline — Santé système
+        Pipeline — Santé système
       </div>
 
       {items.map(({ label, status, color }) => (

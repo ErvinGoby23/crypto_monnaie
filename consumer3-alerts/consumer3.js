@@ -20,12 +20,12 @@ async function start() {
   await mongoClient.connect()
   const db = mongoClient.db('crypto')
   const alerts = db.collection('alerts')
-  console.log('✅ MongoDB connecté')
+  console.log('MongoDB connecté')
 
   await consumer.connect()
   await producer.connect()
   await consumer.subscribe({ topics: ALL_TOPICS, fromBeginning: false })
-  console.log('✅ Consumer 3 connecté à Kafka')
+  console.log('Consumer 3 connecté à Kafka')
 
   await consumer.run({
     eachMessage: async ({ message }) => {

@@ -14,7 +14,6 @@ app.use(express.json())
 const mongoClient = new MongoClient('mongodb://localhost:27017')
 let db
 
-// État réel du système
 const systemStatus = {
   mongodb: false,
   kafka: false,
@@ -60,7 +59,6 @@ function startPolling() {
     }
   }, 500)
 
-  // Calcul TPS + push health toutes les secondes
   setInterval(async () => {
     systemStatus.tradesPerSec = tradeCountLastSec
     tradeCountLastSec = 0
@@ -172,5 +170,5 @@ io.on('connection', async (socket) => {
 })
 
 httpServer.listen(3000, () => {
-  console.log('✅ API server lancé sur http://localhost:3000')
+  console.log('API server lancé sur http://localhost:3000')
 })

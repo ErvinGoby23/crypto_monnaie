@@ -5,9 +5,9 @@ const { createClient } = require('redis')
 const kafka = new Kafka({ brokers: ['localhost:9092'] })
 const producer = kafka.producer()
 
-// ─── Redis buffer de secours ───────────────────────────────────────────────────
+
 const redis = createClient({ url: 'redis://localhost:6379' })
-redis.on('error', (err) => console.error('❌ Redis erreur:', err.message))
+redis.on('error', (err) => console.error('Redis erreur:', err.message))
 
 const REDIS_QUEUE_KEY = 'crypto:trades:buffer'
 const REDIS_MAX_SIZE  = 10000
@@ -18,7 +18,7 @@ const TOPICS = {
   'BTC-USD': 'crypto.trades.coinbase.btcusd'
 }
 
-// ─── Envoi Kafka avec fallback Redis si Kafka KO ───────────────────────────────
+
 async function sendTrade(message) {
   const topic = TOPICS[message.symbol]
 
@@ -28,28 +28,28 @@ async function sendTrade(message) {
       messages: [{ value: JSON.stringify(message) }]
     })
   } catch (kafkaErr) {
-    console.warn(`⚠️  Kafka KO → Redis fallback: ${message.symbol} $${message.price}`)
+    console.warn(`Kafka KO → Redis fallback: ${message.symbol} $${message.price}`)
     try {
       const queueSize = await redis.lLen(REDIS_QUEUE_KEY)
       if (queueSize < REDIS_MAX_SIZE) {
         await redis.rPush(REDIS_QUEUE_KEY, JSON.stringify({ ...message, topic }))
-        console.log(`💾 Redis buffer: ${queueSize + 1}/${REDIS_MAX_SIZE} trades en attente`)
+        console.log(`Redis buffer: ${queueSize + 1}/${REDIS_MAX_SIZE} trades en attente`)
       } else {
-        console.error('❌ Redis buffer plein, trade perdu')
+        console.error('Redis buffer plein, trade perdu')
       }
     } catch (redisErr) {
-      console.error('❌ Redis KO aussi:', redisErr.message)
+      console.error('Redis KO aussi:', redisErr.message)
     }
   }
 }
 
-// ─── Retry : rejoue Redis → Kafka toutes les 5s ───────────────────────────────
+
 async function flushRedisToKafka() {
   try {
     const queueSize = await redis.lLen(REDIS_QUEUE_KEY)
     if (queueSize === 0) return
 
-    console.log(`🔄 Flush Redis → Kafka: ${queueSize} trades en attente`)
+    console.log(`Flush Redis → Kafka: ${queueSize} trades en attente`)
     let sent = 0
 
     while (true) {
@@ -64,7 +64,7 @@ async function flushRedisToKafka() {
       sent++
     }
 
-    console.log(`✅ ${sent} trades rejoués depuis Redis vers Kafka`)
+    console.log(`${sent} trades rejoués depuis Redis vers Kafka`)
   } catch {
     // Kafka encore KO, Redis garde les données
   }
@@ -72,11 +72,11 @@ async function flushRedisToKafka() {
 
 setInterval(flushRedisToKafka, 5000)
 
-// ─── Binance WebSocket ─────────────────────────────────────────────────────────
+
 async function startBinance(symbol) {
   const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`)
 
-  ws.on('open', () => console.log(`✅ Binance ${symbol} connecté`))
+  ws.on('open', () => console.log(`Binance ${symbol} connecté`))
 
   ws.on('message', async (data) => {
     const trade = JSON.parse(data)
@@ -88,23 +88,23 @@ async function startBinance(symbol) {
       source: 'binance'
     }
     await sendTrade(message)
-    console.log(`📨 Binance ${message.symbol} - $${message.price}`)
+    console.log(`Binance ${message.symbol} - $${message.price}`)
   })
 
   ws.on('close', () => {
-    console.log(`🔄 Binance ${symbol} déconnecté, reconnexion...`)
+    console.log(`Binance ${symbol} déconnecté, reconnexion...`)
     setTimeout(() => startBinance(symbol), 3000)
   })
 
   ws.on('error', (err) => console.error(`Binance ${symbol} error:`, err.message))
 }
 
-// ─── Coinbase WebSocket ────────────────────────────────────────────────────────
+
 async function startCoinbase() {
   const ws = new WebSocket('wss://advanced-trade-ws.coinbase.com')
 
   ws.on('open', () => {
-    console.log('✅ Coinbase connecté')
+    console.log('Coinbase connecté')
     ws.send(JSON.stringify({
       type: 'subscribe',
       product_ids: ['BTC-USD'],
@@ -125,27 +125,27 @@ async function startCoinbase() {
             source: 'coinbase'
           }
           await sendTrade(message)
-          console.log(`📨 Coinbase BTC-USD - $${message.price}`)
+          console.log(`Coinbase BTC-USD - $${message.price}`)
         }
       }
     }
   })
 
   ws.on('close', () => {
-    console.log('🔄 Coinbase déconnecté, reconnexion...')
+    console.log('Coinbase déconnecté, reconnexion...')
     setTimeout(() => startCoinbase(), 3000)
   })
 
   ws.on('error', (err) => console.error('Coinbase error:', err.message))
 }
 
-// ─── Démarrage ─────────────────────────────────────────────────────────────────
+
 async function start() {
   await redis.connect()
-  console.log('✅ Redis connecté')
+  console.log('Redis connecté')
 
   await producer.connect()
-  console.log('✅ Kafka producer connecté')
+  console.log('Kafka producer connecté')
 
   startBinance('BTCUSDT')
   startBinance('ETHUSDT')
